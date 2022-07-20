@@ -18,6 +18,7 @@
     "mock:cf-ipfs.com": "smoke -p 9083 test/mocks/cf-ipfs.com"
   },
   "dependencies": {
+    "@web3-storage/worker-utils": "https://gitpkg.now.sh/web3-storage/workers/packages/utils?feat/add-loki-util",
     "ipfs-gateway-race": "link:../ipfs-gateway-race",
     "itty-router": "^2.4.5",
     "multiformats": "^9.6.4",

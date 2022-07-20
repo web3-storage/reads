@@ -25,7 +25,7 @@ router
  * @param {Request} request
  * @param {import('./env').Env} env
  */
-function serverError (error, request, env) {
+function serverError(error, request, env) {
   return addCorsHeaders(request, errorHandler(error, env))
 }
 
@@ -36,12 +36,17 @@ export default {
    * @param {import("./bindings").Env} env
    * @param {Ctx} ctx
    */
-  async fetch (request, env, ctx) {
+  async fetch(request, env, ctx) {
     try {
       const res = await router.handle(request, env, ctx)
-      return res
+      env.log.timeEnd('request')
+      return env.log.end(res)
     } catch (/** @type {any} */ error) {
+      if (env.log) {
+        env.log.timeEnd('request')
+        return env.log.end(serverError(error, request, env))
+      }
       return serverError(error, request, env)
     }
-  }
+  },
 }

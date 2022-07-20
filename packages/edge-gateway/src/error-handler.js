@@ -10,8 +10,7 @@ export function errorHandler(err, env) {
   const status = err.status || 500
 
   if (env.sentry && status >= 500) {
-    // TODO: log errors https://github.com/web3-storage/reads/issues/9
-    // env.log.error(err)
+    env.log.error(err)
   }
 
   return new Response(err.message || 'Server Error', {

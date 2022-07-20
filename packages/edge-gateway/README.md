@@ -13,6 +13,8 @@
 
   ```sh
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry
+    wrangler secret put LOKI_URL --env $(whoami) # Get from Loki
+    wrangler secret put LOKI_TOKEN --env $(whoami) # Get from Loki
   ```
 
 - `pnpm run publish` - Publish the worker under desired env. An alias for `wrangler publish --env $(whoami)`

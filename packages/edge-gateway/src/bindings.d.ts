@@ -1,4 +1,5 @@
 import Toucan from 'toucan-js'
+import { Logging } from '@web3-storage/worker-utils/logging'
 import { IpfsGatewayRacer } from 'ipfs-gateway-race'
 
 export {}
@@ -11,6 +12,8 @@ export interface EnvInput {
   EDGE_GATEWAY_API_URL: string
   REQUEST_TIMEOUT?: number
   SENTRY_DSN?: string
+  LOKI_URL?: string
+  LOKI_TOKEN?: string
   DENYLIST: KVNamespace
   API: Fetcher
 }
@@ -25,6 +28,7 @@ export interface EnvTransformed {
   IPNS_GATEWAY_HOSTNAME: string
   ipfsGateways: Array<string>
   sentry?: Toucan
+  log?: Logging
   gwRacer: IpfsGatewayRacer
 }
 
