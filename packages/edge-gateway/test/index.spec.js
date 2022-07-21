@@ -2,15 +2,17 @@ import { test, getMiniflare } from './utils/setup.js'
 import { addFixtures } from './utils/fixtures.js'
 import { GenericContainer, Wait } from 'testcontainers'
 
+import { RESOLUTION_LAYERS } from '../src/constants.js'
 import { createErrorHtmlContent } from '../src/errors.js'
 
 test.before(async (t) => {
   const container = await new GenericContainer('ipfs/go-ipfs:v0.13.0')
-    .withExposedPorts({
-      container: 8080,
-      host: 9081
-    },
-    5001
+    .withExposedPorts(
+      {
+        container: 8080,
+        host: 9081,
+      },
+      5001
     )
     .withWaitStrategy(Wait.forLogMessage('Daemon is ready'))
     .start()
@@ -20,7 +22,7 @@ test.before(async (t) => {
 
   t.context = {
     container,
-    mf: getMiniflare()
+    mf: getMiniflare(),
   }
 })
 
@@ -52,6 +54,16 @@ test('Gets content', async (t) => {
   )
   await response.waitUntil()
   t.is(await response.text(), 'Hello dot.storage! 😎')
+
+  // Validate content headers
+  t.is(response.headers.get('content-length'), '23')
+
+  // Validate x-dotstorage headers
+  t.is(
+    response.headers.get('x-dotstorage-resolution-layer'),
+    RESOLUTION_LAYERS.PUBLIC_RACE
+  )
+  t.assert(response.headers.get('x-dotstorage-resolution-id'))
 })
 
 test('Gets content with path', async (t) => {
@@ -61,4 +73,14 @@ test('Gets content with path', async (t) => {
     'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:8787/path'
   )
   t.is(await response.text(), 'Hello gateway.nft.storage resource!')
+
+  // Validate content headers
+  t.is(response.headers.get('content-length'), '35')
+  t.is(response.headers.get('content-type'), 'text/plain; charset=utf-8')
+  // Validate x-dotstorage headers
+  t.is(
+    response.headers.get('x-dotstorage-resolution-layer'),
+    RESOLUTION_LAYERS.PUBLIC_RACE
+  )
+  t.assert(response.headers.get('x-dotstorage-resolution-id'))
 })

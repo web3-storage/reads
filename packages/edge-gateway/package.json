@@ -23,6 +23,7 @@
     "itty-router": "^2.4.5",
     "multiformats": "^9.6.4",
     "p-any": "^4.0.0",
+    "p-defer": "^4.0.0",
     "p-retry": "^5.0.0",
     "p-some": "^5.0.0",
     "toucan-js": "^2.5.0",
