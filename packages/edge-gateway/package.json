@@ -1,0 +1,61 @@
+{
+  "name": "edge-gateway",
+  "version": "1.8.3",
+  "description": "IPFS edge gateway for dotstorage",
+  "private": true,
+  "type": "module",
+  "main": "./dist/worker.mjs",
+  "scripts": {
+    "lint": "standard",
+    "build": "tsc && node scripts/cli.js build",
+    "predev": "node scripts/cli.js ipfs --start",
+    "dev": "miniflare dist/worker.mjs --watch --debug -m",
+    "postdev": "node scripts/cli.js ipfs --stop",
+    "test": "npm run test:setup && npm-run-all -p -r mock:ipfs.io mock:cf-ipfs.com test:worker",
+    "test:worker": "ava --verbose test/*.spec.js",
+    "test:setup": "npm run build",
+    "mock:ipfs.io": "smoke -p 9082 test/mocks/ipfs.io",
+    "mock:cf-ipfs.com": "smoke -p 9083 test/mocks/cf-ipfs.com"
+  },
+  "dependencies": {
+    "ipfs-gateway-race": "link:../ipfs-gateway-race",
+    "itty-router": "^2.4.5",
+    "multiformats": "^9.6.4",
+    "p-any": "^4.0.0",
+    "p-retry": "^5.0.0",
+    "p-some": "^5.0.0",
+    "toucan-js": "^2.5.0",
+    "uint8arrays": "^3.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.7.1",
+    "@types/git-rev-sync": "^2.0.0",
+    "@sentry/cli": "^1.71.0",
+    "@web-std/fetch": "^4.0.0",
+    "ava": "^3.15.0",
+    "browser-env": "^3.3.0",
+    "delay": "^5.0.0",
+    "esbuild": "^0.14.2",
+    "execa": "^5.1.1",
+    "git-rev-sync": "^3.0.1",
+    "ipfs-http-client": "^55.0.0",
+    "ipfs-utils": "^9.0.4",
+    "miniflare": "^2.5.0",
+    "node-fetch": "^3.2.6",
+    "npm-run-all": "^4.1.5",
+    "p-wait-for": "^4.1.0",
+    "sade": "^1.7.4",
+    "smoke": "^3.1.1",
+    "standard": "^17.0.0",
+    "testcontainers": "^8.11.0",
+    "typescript": "4.7.3",
+    "toml": "^3.0.0"
+  },
+  "standard": {
+    "ignore": [
+      "dist"
+    ]
+  },
+  "author": "Vasco Santos <santos.vasco10@gmail.com>",
+  "license": "Apache-2.0 OR MIT"
+}

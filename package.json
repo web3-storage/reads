@@ -7,10 +7,13 @@
   "author": "Vasco Santos <santos.vasco10@gmail.com>",
   "license": "Apache-2.0 OR MIT",
   "scripts": {
+    "lint": "run-s lint:*",
     "build": "run-s build:*",
+    "build:edge-gateway": "pnpm --filter edge-gateway build",
     "build:ipfs-gateway-race": "pnpm --filter ipfs-gateway-race build",
     "test": "run-s test:*",
     "test:ipfs-gateway-race": "pnpm --filter ipfs-gateway-race test",
+    "test:edge-gateway": "pnpm --filter edge-gateway test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "clean": "rm -rf node_modules pnpm-lock.yml packages/*/{pnpm-lock.yml,.next,out,coverage,.nyc_output,worker,dist,node_modules}"
