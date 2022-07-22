@@ -1,0 +1,84 @@
+# dotstorage edge gateway wrangler config.
+name = "dotstorage-edge-gateway"
+main = "./dist/worker.mjs"
+compatibility_date = "2022-07-01"
+compatibility_flags = [ "url_standard" ]
+
+[build]
+command = "npm run build"
+
+# miniflare
+[vars]
+IPFS_GATEWAYS = "[\"http://127.0.0.1:9081\"]"
+GATEWAY_HOSTNAME = 'ipfs.localhost:8787'
+EDGE_GATEWAY_API_URL = 'http://localhost:8787'
+DEBUG = "true"
+ENV = "dev"
+
+# PROD!
+[env.production]
+# name = "dotstorage-edge-gateway-production"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+routes = [
+  "dag.haus/ipfs/*",
+  "*.ipfs.dag.haus/*",
+  "ipfs.dag.haus/*",
+  "*.ipfs.dag.haus",
+  "dag.haus/ipns/*",
+  "*.ipns.dag.haus/*",
+  "*.ipns.dag.haus"
+]
+kv_namespaces = [{ binding = "DENYLIST", id = "785cf627e913468ca5319523ae929def" }]
+
+[env.production.vars]
+IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://pinata.nftstorage.link\"]"
+GATEWAY_HOSTNAME = 'ipfs.dag.haus'
+EDGE_GATEWAY_API_URL = 'https://api.nftstorage.link'
+DEBUG = "false"
+ENV = "production"
+
+# TODO: Should point to general API in the future
+[[env.production.services]]
+binding = "API"
+type = "service"
+service = "nftstorage-link-api-production"
+environment = "production"
+
+# Staging!
+[env.staging]
+# name = "gateway-nft-storage-staging"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+routes = [
+  "*.ipfs-staging.dag.haus/*",
+  "ipfs-staging.dag.haus/*",
+  "*.ipfs-staging.dag.haus",
+  "*.ipns-staging.dag.haus/*",
+  "*.ipns-staging.dag.haus"
+]
+kv_namespaces = [{ binding = "DENYLIST", id = "f4eb0eca32e14e28b643604a82e00cb3" }]
+
+[env.staging.vars]
+IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://pinata.nftstorage.link\"]"
+GATEWAY_HOSTNAME = 'ipfs-staging.dag.haus'
+EDGE_GATEWAY_API_URL = 'https://api.nftstorage.link'
+DEBUG = "true"
+ENV = "staging"
+
+# TODO: Should point to general API in the future
+[[env.staging.services]]
+binding = "API"
+type = "service"
+service = "nftstorage-link-api-staging"
+environment = "production"
+
+# Test!
+[env.test]
+workers_dev = true
+kv_namespaces = [{ binding = "DENYLIST" }]
+
+[env.test.vars]
+IPFS_GATEWAYS = "[\"http://127.0.0.1:9081\", \"http://localhost:9082\", \"http://localhost:9083\"]"
+GATEWAY_HOSTNAME = 'ipfs.localhost:8787'
+EDGE_GATEWAY_API_URL = 'http://localhost:8787'
+DEBUG = "true"
+ENV = "test"
